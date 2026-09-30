@@ -1,0 +1,566 @@
+<!doctype html>
+<html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>HMI آموزشی راه‌اندازی الکترولایزر</title><style>
+:root{--bg:#050b12;--panel:#0a1724;--line:#234054;--text:#e6f0f6;--muted:#89a0b0;--cyan:#45d5ed;--green:#4ad58f;--yellow:#ffc45b;--red:#ff6372;--brine:#4ac5ff;--caustic:#b77cff;--chlorine:#f2d04b;--hydrogen:#f0a2ed;--hcl:#ff9f6b;--n2:#7fe0c0}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 12% -6%,#123145,transparent 38%),var(--bg);color:var(--text);font:13px Vazirmatn,Tahoma,Arial,sans-serif}.top{height:70px;display:flex;align-items:center;justify-content:space-between;padding:0 26px;border-bottom:1px solid var(--line);background:#06101a}.brand{display:flex;align-items:center;gap:10px}.brandmark{width:34px;height:34px;display:grid;place-items:center;border-radius:8px;background:linear-gradient(135deg,var(--cyan),#476dff);color:#03141d;font:bold 14px Arial}.brand h1{font-size:15px;margin:0}.brand small,.muted{display:block;color:var(--muted);font-size:10px;margin-top:3px}.chip{border:1px solid #2c5267;background:#0c2635;border-radius:20px;padding:7px 11px;color:#a9ddec;font-size:11px}.chip:before{content:'●';color:var(--green);padding-left:6px}.page{max-width:1600px;margin:auto;padding:18px 24px}.titlebar{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:18px}.titlebar h2{margin:0 0 5px;font-size:20px}.tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:min(100%,540px);padding:0;background:transparent;border:0;flex:0 1 540px}.tabs button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:56px;background:#0c1f2c;border:1px solid #1d3d50;color:#c2d4de;padding:8px;cursor:pointer;font:600 12.5px Vazirmatn,Tahoma;line-height:1.35;border-radius:9px;position:relative;transition:.18s;white-space:nowrap;text-align:center}.tabs button:before{display:block;font:700 8.5px Arial;letter-spacing:1px;margin-bottom:0}.tabs button:nth-child(1){border-color:#24637b;color:#9edff3}.tabs button:nth-child(1):before{content:'FLOW';color:#5cc9f5}.tabs button:nth-child(2){border-color:#5c4383;color:#d2b6ff}.tabs button:nth-child(2):before{content:'DATA';color:#b78cff}.tabs button:nth-child(3){border-color:#765926;color:#ffe09a}.tabs button:nth-child(3):before{content:'SEQUENCE';color:#f2d04b}.tabs button:hover:not(.active){filter:brightness(1.2);transform:translateY(-1px)}.tabs button.active{color:#fff;box-shadow:0 4px 16px -6px currentColor}.tabs button.active:nth-child(1){background:linear-gradient(180deg,#15546c,#0c3446);border-color:#5cc9f5}.tabs button.active:nth-child(2){background:linear-gradient(180deg,#4b326e,#251844);border-color:#b78cff}.tabs button.active:nth-child(3){background:linear-gradient(180deg,#695221,#30250e);border-color:#f2d04b}
+.tabs button.step0{--sc:#7f9db0}.tabs button.step1{--sc:#45d5ed}.tabs button.step2{--sc:#ffc45b}.tabs button.step3{--sc:#b78cff}.tabs button.step4{--sc:#7fe0c0}.tabs button.step5{--sc:#4ad58f}
+.tabs button[class*="step"]{box-shadow:inset 0 -4px 0 -1px var(--sc)}
+.tabs button.active[class*="step"]{background:linear-gradient(180deg,color-mix(in srgb,var(--sc) 34%,#0c1f2c),#0a1a26);border-color:var(--sc);color:#fff}
+.tabs button.active[class*="step"]:before{color:var(--sc)}.panel{background:linear-gradient(150deg,#0c1c2a,#08131e);border:1px solid var(--line);border-radius:10px;overflow:hidden}.head{padding:12px 15px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;background:#0a1926}.head h3{font-size:12px;margin:0}.code{font:10px monospace;color:#7bdcf0;background:#102e3e;padding:4px 6px;border-radius:3px;direction:ltr}
+.controls{background:linear-gradient(150deg,#0e2233,#08131e);border:1px solid #2d5a72;border-radius:10px;overflow:hidden;margin-bottom:14px}.controls .head{background:#0b2738;border-bottom:1px solid #2d5a72}.controls .head h3{font-size:13px;color:#bfeaf5}.ctl{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:12px 15px;border-bottom:1px solid #17364a}.btns{display:flex;gap:8px;flex-wrap:wrap}.btns button{min-width:132px;height:42px;padding:0 18px;border:0;border-radius:6px;font:600 13px Vazirmatn;cursor:pointer;background:var(--cyan);color:#05212b;transition:.15s}.btns button:hover:not(:disabled){filter:brightness(1.12)}.btns .secondary{background:#1b3c51;color:#d7e5ec}.btns .danger{background:#dc5362;color:#fff}.btns button:disabled{opacity:.4;cursor:not-allowed}.adv{display:flex;gap:8px;margin-right:auto;align-items:center}.adv button{min-width:112px;height:42px;padding:0 14px;font:600 12px Vazirmatn;border-radius:6px;border:1px solid #2d5a72;background:#0d2434;color:#a9ddec;cursor:pointer;transition:.15s}.adv button:hover:not(:disabled){background:#15364b}.adv button:disabled{opacity:.35;cursor:not-allowed}.stepper{display:flex;align-items:center;padding:12px 15px;overflow-x:auto}.step{display:flex;align-items:center;gap:8px;flex:0 0 auto;padding:7px 12px;border-radius:20px;border:1px solid #24485d;background:#081a26;color:#8ba6b4;font-size:11px;cursor:pointer;white-space:nowrap}.step.done{border-color:#2f6b4e;background:#0d2a20;color:#86d9ac}.step.now{border-color:var(--cyan);background:#0f3346;color:#eafcff;box-shadow:0 0 0 3px #45d5ed22}.step i{width:19px;height:19px;border-radius:50%;display:grid;place-items:center;font:600 10px Arial;background:#173447;color:#9cd7ea;font-style:normal}.step.done i{background:#1f5c42;color:#c9f5dd}.step.now i{background:var(--cyan);color:#04202a}.sep{flex:0 0 auto;width:16px;height:2px;background:#27495d}
+.grid2{display:grid;grid-template-columns:1.42fr .82fr;gap:14px;align-items:start}
+.pane{display:none}.pane.active{display:block}
+.stepperWrap{margin-top:2px}
+/* ===== step detail table ===== */
+.stepDetail{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;padding:12px 15px 4px}
+.sd{background:#081724;border:1px solid #1d3b4e;border-radius:7px;padding:9px 10px}
+.sd label{display:block;font-size:9px;color:#8fa9b6;margin-bottom:5px}
+.sd b{display:block;font:600 12.5px Arial;color:#eaf8fd;direction:ltr}
+.sd small{display:block;font-size:9px;color:#7f9aab;margin-top:4px;line-height:1.6}
+.sd.on{border-color:#2f6b4e;background:#0c2419}.sd.on b{color:#8ce8b6}
+.sd.off{opacity:.5}.sd.warn{border-color:#7a5c22}.sd.warn b{color:var(--yellow)}
+.valveRow{display:flex;flex-wrap:wrap;gap:7px;padding:0 15px 12px}
+.vpill{display:flex;align-items:center;gap:6px;border:1px solid #24485d;background:#081a26;border-radius:20px;padding:5px 11px;font-size:10.5px;color:#a9c3cf}
+.vpill i{font-style:normal;width:8px;height:8px;border-radius:50%;background:#41525d}
+.vpill.open{border-color:#2f6b4e;color:#9ee6bf}.vpill.open i{background:#4ad58f;box-shadow:0 0 6px #4ad58f99}
+.vpill.closed{border-color:#6a3340;color:#f2a8b1}.vpill.closed i{background:#ff6372}
+.vpill.auto{border-color:#7a5c22;color:#ffd88f}.vpill.auto i{background:#ffc45b}
+.stepDetailTable{display:grid;gap:0;padding:0 15px 14px}
+#flowTable{padding:0 8px 8px;margin-top:8px;border:1px solid #16303f;border-radius:5px;overflow:hidden}
+#flowTable .sdr{grid-template-columns:1.55fr 1fr 1fr;font-size:9px}
+#flowTable .sdr>div{padding:4px 5px;line-height:1.35;white-space:nowrap}
+#flowTable .sdr.hd>div{font-size:8.5px;padding-top:5px;padding-bottom:5px}
+.sdr{display:grid;grid-template-columns:1.25fr 1.45fr 1.45fr;gap:0;border-bottom:1px solid #16303f;font-size:10.5px}
+.sdr>div{padding:7px 9px;line-height:1.7}
+.sdr.hd>div{color:#7f9aab;font-size:9.5px;background:#081c28;border-bottom:1px solid #234054}
+.sdr .k{color:#c6d6de}.sdr .v{color:#8fe4f6;direction:ltr;text-align:right}.sdr .m{color:#a8bcc8}
+.sdr.hot>div{background:#2b2418}
+
+/* ===== schematic ===== */
+.sch{width:100%;height:auto;display:block;background:#071019;border:1px solid #1d3a4e;border-radius:4px}
+.sch text{font-family:Vazirmatn,Tahoma,Arial,sans-serif;fill:#a8bcc8;font-size:11px}
+/* drawing frame + zone labels */
+.sch .zone{font:bold 11px Vazirmatn,Tahoma;fill:#7d97a8;letter-spacing:.4px}
+.sch .fdir{font:10px Vazirmatn,Tahoma;fill:#6b8697}
+/* process equipment: rectangular boxes, per P&ID convention */
+.sch .unit{fill:#0d2030;stroke:#5d8aa3;stroke-width:1.6}
+.sch .unit.sm{stroke:#46708a;stroke-width:1.4}
+/* every caption block hugs its right edge: no stray arrows, no clipped tails */
+.sch .unitlbl,.sch .unitsub,.sch .unitsub2,.sch .unitstag,.sch .cellhdr,.sch .celltag{text-anchor:end;direction:ltr}
+/* in-box captions: larger and colour-coded so each line reads at a glance */
+.sch .unitlbl{font:bold 12.5px Vazirmatn,Tahoma;fill:#f2fbff}
+.sch .unitsub{font:11px Vazirmatn,Tahoma;fill:#7fd8f5}
+.sch .unitsub2{font:bold 11.5px Vazirmatn,Tahoma;fill:#ffe08a}
+.sch .unitstag{font:10px Vazirmatn,Tahoma;fill:#a6e6bd}
+.sch .cellhdr{font:bold 12px Vazirmatn,Tahoma}
+.sch .celltag{font:10.5px Vazirmatn,Tahoma;fill:#8fd7e8}
+/* instrument bubble (ISA-5.1): circle with function tag over loop number */
+.sch .bubble circle{fill:#0b1d29;stroke:#8fb6c8;stroke-width:1.3}
+.sch .bubble line{stroke:#8fb6c8;stroke-width:1}
+.sch .bt{font:bold 8.5px Arial;fill:#cfe6f2;direction:ltr}
+.sch .bt2{font:8px Arial;fill:#8fb0c2;direction:ltr}
+/* valves: butterfly (two triangles) + actuator box */
+.sch .valve path{fill:#122a3a;stroke:#9dbccb;stroke-width:1.3}
+.sch .valve rect{fill:#0d2431;stroke:#9dbccb;stroke-width:1.2}
+.sch .valve.f path,.sch .valve.f rect{stroke:#6ee0a4}
+.sch .valve.o path,.sch .valve.o rect{stroke:#ff8f9c}
+/* an open valve pulses so the line-up is obvious at a glance */
+@keyframes blk{50%{opacity:.28}}
+.sch .valve.blink path,.sch .valve.blink rect{animation:blk 1.1s ease-in-out infinite}
+.sch .valve.blink path{fill:#1d4a3a;stroke:#6ee0a4}
+.sch .vtag{font:9px Arial;fill:#93aebd;direction:ltr}
+.sch .vst{font:bold 10px Vazirmatn,Tahoma}
+.sch .vst.open{fill:#6ee0a4}
+.sch .vst.shut{fill:#ff8f9c}
+.sch .vst.blink{animation:blk 1.1s ease-in-out infinite}
+.sch .sr{font:9px Arial;fill:#8fa9b6;direction:ltr}
+/* cell */
+.sch .frame{fill:#061019;stroke:#3a6a86;stroke-width:1.4}
+.sch .framehdr{font:bold 11px Arial;fill:#cfe9f5;direction:ltr}
+.sch .cellAn{fill:url(#gAn);stroke:#4aa5d8;stroke-width:1.4}
+.sch .cellCat{fill:url(#gCat);stroke:#9d7ae0;stroke-width:1.4}
+.sch .cellhdr{font:bold 10.5px Vazirmatn,Tahoma}
+.sch .celltag{font:9px Vazirmatn,Tahoma;fill:#7e97a6}
+.sch .memb{fill:#e9d27a;opacity:.9}
+.sch .plate{fill:none;stroke:#2f5a74;stroke-width:1;opacity:.75}
+.sch .bigcur{font:bold 22px Arial;fill:#8fe4f6;direction:ltr}
+.sch .stater{font:bold 11px Vazirmatn,Tahoma;fill:#b77cff}
+.sch .railv{font:bold 12px Arial;fill:#f0c76a;direction:ltr}
+/* pipework: primary process lines are heavy, per PIP PIC001 */
+.sch .pl{fill:none;stroke:#2c4d64;stroke-width:5.5;stroke-linecap:square}
+.sch .bus{fill:none;stroke:#c98a3f;stroke-width:3}
+.sch .flow{fill:none;stroke-width:2.4;stroke-linecap:round;stroke-dasharray:7 13;opacity:0}
+.sch .fB{stroke:#5cc9f5}.sch .fC{stroke:#b78cff}.sch .fCl{stroke:#f2d04b}.sch .fH2{stroke:#e79ae4}.sch .fHCl{stroke:#ff9f6b}.sch .fN2{stroke:#7fe0c0}
+.sch .lamp{stroke:#0a1b24;stroke-width:1}
+.sch .lamp.on{fill:#5ce08c}
+.sch .lamp.off{fill:#41525d}
+/* title block */
+.sch .tblock{fill:#0a1a26;stroke:#2c5267;stroke-width:1.2}
+.sch .tb{font:bold 10px Vazirmatn,Tahoma;fill:#bcd6e2}
+.sch .tb.dim{font:9px Vazirmatn,Tahoma;fill:#7d97a8}
+.sch .nt{font:10.5px Vazirmatn,Tahoma;fill:#8ea7b7}
+.sch .ntdim{font:9.5px Vazirmatn,Tahoma;fill:#63798a}
+.sch.activeCell{filter:drop-shadow(0 0 5px #38c9ec55)}
+.sch .dim{opacity:.35}
+.sch .lgnd{font:10px Vazirmatn,Tahoma;fill:#9eb4c1}
+.ramp{display:flex;gap:0;margin-top:10px;border:1px solid #1d3a4e;border-radius:8px;overflow:hidden;background:#071019}
+.ramp .r{flex:1;padding:8px 6px;text-align:center;border-left:1px solid #16303f;position:relative;opacity:.5;transition:.2s}
+.ramp .r:last-child{border-left:0}
+.ramp .r.on{opacity:1;background:#0d2a38}
+.ramp .r b{display:block;font:700 13px Arial;color:#8fe4f6;direction:ltr;margin-bottom:3px}
+.ramp .r s{display:block;font-size:9.5px;color:#9fbcc9;text-decoration:none;line-height:1.5}
+.ramp .r em{display:block;font:9px Arial;color:#6f8a9b;font-style:normal;margin-top:3px;direction:ltr}
+/* ===== schematic: static P&ID (no animation) ===== */
+@keyframes dash{to{stroke-dashoffset:-140}}
+@keyframes pulse{0%,100%{opacity:.45}50%{opacity:1}}
+@keyframes blink{0%,49%{opacity:1}50%,100%{opacity:.2}}
+.sch .flow.on{animation:dash var(--gas-speed,1.8s) linear infinite}.sch .flow.gas{stroke-width:var(--gas-width,2.4px);transition:stroke-width .35s ease,opacity .35s ease}
+.sch .memb.live{animation:none}
+.sch .loadbg{fill:#0a1a26;stroke:#2a5470;stroke-width:1}
+.sch .loadbar{fill:url(#gLoad);transition:width .5s ease}
+.sch .loadtxt{font:bold 10px Vazirmatn,Tahoma;fill:#9fd9ee}
+.sch .lvbg{fill:#0a1a26;stroke:#2a5470;stroke-width:1}
+.sch .lv{font:bold 11px Vazirmatn,Tahoma;fill:#8ce9ff;text-anchor:middle}
+.sch .blink{animation:blink 1.1s steps(1) infinite}
+.legend{display:flex;flex-wrap:wrap;gap:11px;padding:10px 3px 0;color:#9eb4c1;font-size:10px}.legend span:before{content:'';display:inline-block;width:15px;height:4px;border-radius:4px;margin-left:5px;background:var(--x)}
+.eqs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:11px}.eq{display:flex;align-items:center;gap:8px;background:#081724;border:1px solid #1d3b4e;border-radius:6px;padding:8px 10px}.eq b{font:600 12px Arial;color:#eaf8fd;direction:ltr;min-width:38px}.eq span{font-size:10px;color:#9fbcc9;line-height:1.5}.eq.on{border-color:#2f6b4e}.eq.off{opacity:.55}
+.learn .ltitle{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}.learn .ltitle b{font-size:13px;color:#d9f3fb}.learn .goal{font-size:11px;color:#9fbcc9;line-height:1.85;margin-bottom:9px;padding-bottom:9px;border-bottom:1px dashed #23485c}.learn .specs{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:10px}.spec{background:#081724;border:1px solid #1d3b4e;border-radius:6px;padding:8px 10px}.spec label{display:block;font-size:9px;color:#8fa9b6;margin-bottom:4px}.spec b{font:600 12px Arial;color:#eaf8fd;direction:ltr;display:block}.spec.warn b{color:var(--yellow)}.spec.ok b{color:var(--green)}.spec.bad b{color:var(--red)}
+.learn ol{margin:0;padding:0;list-style:none;counter-reset:s2}.learn ol li{counter-increment:s2;position:relative;padding:8px 27px 8px 0;font-size:11px;line-height:1.75;color:#c6d6de;border-bottom:1px solid #16303f}.learn ol li:last-child{border-bottom:0}.learn ol li:before{content:counter(s2);position:absolute;right:0;top:9px;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:#15384b;color:#78ddf0;font:10px Arial}.learn ol li.stop:before{background:#4a2a1c;color:#ffcf8a}.learn ol li.stop{color:#f0d6b8}.learn .why{margin-top:10px;font-size:10.5px;line-height:1.85;color:#93aebc;background:#071824;border-right:3px solid var(--cyan);border-radius:5px;padding:9px 11px}.learn .why b{color:#8fe4f6}
+.alarm{border-right:4px solid var(--yellow);background:#2b2418;border-radius:6px;padding:11px;line-height:1.8;font-size:11px}.alarm strong{display:block;color:#ffda92;margin-bottom:2px}.alarm.stop{border-color:var(--red);background:#311d24}.alarm.stop strong{color:#ffabb4}.alarm.ok{border-color:var(--green);background:#12291f}.alarm.ok strong{color:#93e8b4}
+.matrix{width:100%;border-collapse:collapse;font-size:10px}.matrix th{color:#87a0af;text-align:right;font-weight:normal}.matrix td,.matrix th{padding:8px 4px;border-bottom:1px solid #1e3a4d}.matrix td:nth-child(2){color:#78dcf0;direction:ltr;text-align:right}.status{display:inline-block;border-radius:10px;padding:2px 6px;font-size:9px}.status.ready{background:#15382d;color:#78dfa7}.status.hold{background:#473617;color:#ffd681}.status.trip{background:#48232a;color:#ffa2aa}
+.note{color:#8aa2b2;font-size:10px;line-height:1.7;margin-top:14px}
+@media(max-width:1000px){.grid2{grid-template-columns:1fr}.titlebar{align-items:stretch;flex-direction:column;gap:10px}.tabs{flex:0 0 auto;width:100%;max-width:100%}.page{padding:15px}.top{padding:0 15px}.adv{margin-right:0;width:100%}.stepDetail{grid-template-columns:1fr 1fr 1fr}}
+@media(max-width:560px){.specs,.eqs{grid-template-columns:1fr}.top .chip{display:none}.stepDetail{grid-template-columns:1fr 1fr}.sdr{grid-template-columns:1fr}.tabs button{min-height:50px;font-size:11px;padding:7px 4px}.tabs button:before{letter-spacing:.4px;font-size:8px}.btns,.btns button,.adv,.adv button{width:100%}.btns,.adv{flex-direction:column;align-items:stretch}.adv{margin-top:8px}.btns button,.adv button{min-width:0}.ctl{gap:8px}}body.day{--bg:#edf4f7;--panel:#fff;--line:#b8ccd5;--text:#17313e;--muted:#58717d;--cyan:#087f9a;--green:#168653;--yellow:#a66a00;--red:#c6384d}body.day{background:linear-gradient(135deg,#dcecf2,#f7fbfc 48%,#dce8ee)}body.day .top,body.day .controls{background:#f7fbfc;border-color:#b8ccd5}body.day .panel{background:linear-gradient(150deg,#fff,#edf5f7);border-color:#b8ccd5}body.day .head{background:#e5f0f3;border-color:#c4d6dd}body.day .btns .secondary,body.day .adv button{background:#d8e8ed;color:#17313e;border-color:#9ebac5}body.day .step,body.day .vpill,body.day .sd,body.day .spec,body.day .eq{background:#edf5f7;border-color:#b8ccd5;color:#294b58}body.day .sch{background:#f4fafb;border-color:#9ebac5}body.day .sch .unit{fill:#e6f2f5;stroke:#477d8d}body.day .sch .unit.sm{stroke:#608f9e}body.day .sch .frame{fill:#eef7f9;stroke:#477d8d}body.day .sch .cellAn{fill:#cfeaf4}body.day .sch .cellCat{fill:#e6d8fa}body.day .sch .vtag,body.day .sch .vst,body.day .sch text{fill:#315563}body.day .sch .pl{stroke:#6a8a96}body.day .sch .tblock{fill:#e8f2f4;stroke:#8aaab5}body.day .learn .why,body.day .alarm{background:#e8f2f4}body.day .sdr.hd>div{background:#e2eef1}body.day .sdr>div{border-color:#c4d6dd}
+</style></head><body>
+<header class="top"><div class="brand"><div class="brandmark">EL</div><div><h1>HMI آموزشی راه‌اندازی الکترولایزر</h1><small>SINGLE ELECTROLYZER · 41EL08101A</small></div></div><span class="chip" id="topState">B-STATE · READY</span></header>
+<main class="page"><div class="titlebar"><div><h2 id="title">الکترولایزر 41EL08101A — توالی راه‌اندازی</h2><span class="muted">۱۶۳ المان · سل ممبرانی · آب‌نمک / کاستیک / کلر / هیدروژن</span></div>
+<div class="tabs" id="tabs"><button class="active" data-pane="paneSch">شماتیک فرایند</button><button data-pane="paneDet">جزئیات و مقادیر</button><button data-pane="paneStep">گام‌ها و اقدام</button></div></div>
+
+<section class="panel controls"><div class="head"><h3>پنل عملیات — اکشن‌ها و توالی هدایت‌شده</h3><span class="code" id="ctlState">B-STATE · STANDBY</span></div>
+<div class="ctl"><div class="btns"><button id="start">شروع توالی</button><button id="next" class="secondary" disabled>تأیید گام و ادامه</button><button id="reset" class="secondary">بازنشانی</button><button id="shutdown" class="danger">راهنمای OFF</button></div><div class="adv"><button id="back" disabled>گام قبل</button><button id="jump">پرش به A-STATE</button><button id="themeToggle">حالت روز</button></div></div>
+<div class="stepper" id="stepper"></div></section>
+
+<section class="pane active" id="paneSch"><div class="panel"><div class="head"><h3>شماتیک فرایند — تک الکترولایزر 41EL08101A</h3><span class="code" id="phase">STEP-01</span></div><div class="body">
+<svg class="sch" id="sch" viewBox="0 0 1280 600" aria-label="P&amp;ID ساده‌شده — تک الکترولیزور 41EL08101A">
+<defs>
+<linearGradient id="gAn" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f4360"/><stop offset="1" stop-color="#092434"/></linearGradient>
+<linearGradient id="gCat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#33205f"/><stop offset="1" stop-color="#180f34"/></linearGradient>
+<linearGradient id="gLoad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2f7fa8"/><stop offset=".6" stop-color="#45d5ed"/><stop offset="1" stop-color="#7fe0c0"/></linearGradient>
+<marker id="mB" markerWidth="8" markerHeight="8" refX="6.6" refY="2.8" orient="auto"><path d="M0,0 L0,5.6 L7,2.8z" fill="#5cc9f5"/></marker>
+<marker id="mC" markerWidth="8" markerHeight="8" refX="6.6" refY="2.8" orient="auto"><path d="M0,0 L0,5.6 L7,2.8z" fill="#b78cff"/></marker>
+<marker id="mCl" markerWidth="8" markerHeight="8" refX="6.6" refY="2.8" orient="auto"><path d="M0,0 L0,5.6 L7,2.8z" fill="#f2d04b"/></marker>
+<marker id="mH2" markerWidth="8" markerHeight="8" refX="6.6" refY="2.8" orient="auto"><path d="M0,0 L0,5.6 L7,2.8z" fill="#e79ae4"/></marker>
+<marker id="mHCl" markerWidth="8" markerHeight="8" refX="6.6" refY="2.8" orient="auto"><path d="M0,0 L0,5.6 L7,2.8z" fill="#ff9f6b"/></marker>
+<marker id="mN2" markerWidth="8" markerHeight="8" refX="6.6" refY="2.8" orient="auto"><path d="M0,0 L0,5.6 L7,2.8z" fill="#7fe0c0"/></marker>
+</defs>
+
+<!-- ===== drawing frame ===== -->
+<rect x="14" y="12" width="1252" height="576" rx="6" fill="none" stroke="#22415a" stroke-width="1.4"/>
+
+<!-- ===== zone labels ===== -->
+<text class="zone" x="40" y="42">FEED / ورودی‌ها</text>
+<text class="zone" x="640" y="42" text-anchor="middle">ELECTROLYZER</text>
+<text class="zone" x="1240" y="42" text-anchor="end">PRODUCT / خروجی‌ها</text>
+
+<!-- ================= FEED BLOCKS (left) ================= -->
+<rect class="unit" x="40" y="70" width="250" height="70" rx="5"/>
+<text class="unitlbl" x="270" y="98">آب‌نمک فوق‌خالص</text>
+<text class="unitsub" x="270" y="117">41E-06103 · 70–75 °C</text>
+<text class="unitstag" x="270" y="132">NaCl &gt; 270 g/L</text>
+
+<rect class="unit sm" x="40" y="160" width="250" height="56" rx="5"/>
+<text class="unitlbl" x="270" y="182">HCl 16%</text>
+<text class="unitsub" x="270" y="200">41V-06103 · اسیدزنی ۴ kA/EL</text>
+
+<rect class="unit sm" x="40" y="236" width="250" height="56" rx="5"/>
+<text class="unitlbl" x="270" y="258">N₂ PURGE</text>
+<text class="unitsub" x="270" y="276">N2-pu-AH/CH · پاک‌سازی</text>
+
+<rect class="unit" x="40" y="312" width="250" height="70" rx="5"/>
+<text class="unitlbl" x="270" y="340">کاستیک/کاتولیت</text>
+<text class="unitsub" x="270" y="358">41V-31102A · 41E-31101</text>
+<text class="unitstag" x="270" y="373">NaOH 25–32 %wt</text>
+
+<!-- ================= ELECTROLYZER FRAME (centre) ================= -->
+<rect class="frame" x="522" y="70" width="296" height="470" rx="6"/>
+<text class="framehdr" x="670" y="94" text-anchor="middle">41EL08101A</text>
+<text class="ntdim" x="670" y="112" text-anchor="middle" direction="ltr">163 El. · Asahi Memb.</text>
+
+<rect class="cellAn" id="cellA" x="548" y="128" width="112" height="330" rx="4"/>
+<rect class="cellCat" id="cellC" x="680" y="128" width="112" height="330" rx="4"/>
+<rect class="memb" x="664" y="128" width="12" height="330" rx="3"/>
+<text class="cellhdr" x="650" y="152" fill="#a8e4ff">ANOLYTE</text>
+<text class="cellhdr" x="782" y="152" fill="#d7b8ff">CATHOLYTE</text>
+<text class="celltag" x="650" y="172">NaCl · pH 3.5–5</text>
+<text class="celltag" x="782" y="172">NaOH 25–32 %wt</text>
+
+<g class="plate">
+<path d="M566 196 V424 M586 196 V424 M626 196 V424 M646 196 V424"/>
+<path d="M698 196 V424 M718 196 V424 M758 196 V424 M778 196 V424"/>
+</g>
+
+<text class="bigcur" x="670" y="268" text-anchor="middle" id="cellCur">0 kA</text>
+<text class="stater" x="670" y="290" text-anchor="middle" id="cellState">B-STATE</text>
+
+<g class="bubble" id="tV"><circle cx="604" cy="322" r="15"/><line x1="589" y1="322" x2="619" y2="322"/><text class="bt" x="604" y="318" text-anchor="middle">TT</text><text class="bt2" x="604" y="332" text-anchor="middle">41</text></g>
+<g class="bubble" id="pV"><circle cx="736" cy="322" r="15"/><line x1="721" y1="322" x2="751" y2="322"/><text class="bt" x="736" y="318" text-anchor="middle">PT</text><text class="bt2" x="736" y="332" text-anchor="middle">41</text></g>
+
+<rect class="loadbg" x="548" y="472" width="244" height="14" rx="4"/>
+<rect class="loadbar" id="loadBar" x="548" y="472" width="0" height="14" rx="4"/>
+<text class="loadtxt" x="670" y="504" text-anchor="middle" id="loadTxt">بار: ۰٪ از ۱۴٫۹ kA/EL</text>
+
+<!-- ================= RECTIFIER (below) ================= -->
+<rect class="unit" x="510" y="556" width="320" height="0" fill="none" stroke="none"/>
+<text class="unitsub" x="530" y="536">RECTIFIER + TRANSFORMER · POLARIZATION ≈ 27 A</text>
+<text class="unitsub" x="530" y="518">DC BUS: <tspan id="curRail" fill="#f0c76a" font-weight="bold">0.0 kA</tspan> / EL</text>
+<circle class="lamp off" id="lampMain" cx="840" cy="524" r="5"/><text class="unitsub" x="852" y="528">MAIN</text>
+<circle class="lamp off" id="lampPol" cx="920" cy="524" r="5"/><text class="unitsub" x="932" y="528">POLAR.</text>
+<path class="bus" d="M670 540 V556"/>
+<path class="flow fB" id="flBusFlow" style="stroke:#c98a3f" d="M670 556 V540" opacity="0"/>
+
+<!-- ================= PRODUCT BLOCKS (right) ================= -->
+<rect class="unit" x="1000" y="70" width="240" height="70" rx="5"/>
+<text class="unitlbl" x="1220" y="98">Cl₂ OUTLET</text>
+<text class="unitsub" x="1220" y="117">هدر ۱۶۰–۱۸۰ mbarg</text>
+<text class="unitstag" x="1220" y="132">Cl₂ &gt; ۹۵ %vol</text>
+
+<rect class="unit" x="1000" y="160" width="240" height="70" rx="5"/>
+<text class="unitlbl" x="1220" y="188">H₂ OUTLET</text>
+<text class="unitsub" x="1220" y="207">هدر H₂ · ΔP ۲۰–۴۰ mbar</text>
+
+<rect class="unit sm" x="1000" y="248" width="240" height="56" rx="5"/>
+<text class="unitlbl" x="1220" y="272">WASTE GAS</text>
+<text class="unitsub" x="1220" y="290">STACK · تخلیه در بار کم</text>
+
+<rect class="unit" x="1000" y="326" width="240" height="56" rx="5"/>
+<text class="unitlbl" x="1220" y="350">ANOLYTE OUTLET</text>
+<text class="unitsub" x="1220" y="368">آب‌نمک ضعیف · pH ۳٫۵–۵</text>
+
+<rect class="unit" x="1000" y="398" width="240" height="70" rx="5"/>
+<text class="unitlbl" x="1220" y="426">CATHOLYTE OUTLET</text>
+<text class="unitsub" x="1220" y="445">NaOH · 41E-31101</text>
+<text class="unitstag" x="1220" y="460">DEMIN H₂O makeup</text>
+
+<!-- ================= PROCESS LINES ================= -->
+<path class="pl" d="M290 105 H520"/>
+<path class="flow fB" id="flBrine" d="M290 105 H520" marker-end="url(#mB)"/>
+<g class="valve" id="vFVB"><path d="M342 93 L354 105 L342 117 Z"/><path d="M366 93 L354 105 L366 117 Z"/><path d="M354 93 V82"/><rect x="346" y="72" width="16" height="10" rx="2"/></g>
+<g class="bubble" id="bFV"><circle cx="354" cy="58" r="14"/><line x1="340" y1="58" x2="368" y2="58"/><text class="bt" x="354" y="54" text-anchor="middle">FV</text><text class="bt2" x="354" y="67" text-anchor="middle">41</text></g>
+<text class="vtag" x="354" y="128" text-anchor="middle">41FV-BRINE</text>
+<text class="vst" id="stFernB" x="354" y="142" text-anchor="middle">باز</text>
+<rect class="lvbg" x="386" y="94" width="112" height="22" rx="4"/>
+<text class="lv" x="440" y="110" text-anchor="end" direction="ltr" id="liveBrine">20.4 m³/h</text>
+
+<path class="pl" id="hclLine" d="M290 188 H542" opacity="0"/>
+<path class="flow fHCl" id="flHCl" d="M290 188 H542" opacity="0" marker-end="url(#mHCl)"/>
+
+<path class="pl" id="n2Line" d="M290 264 H542" opacity="1"/>
+<path class="flow fN2" id="flN2" d="M290 264 H542" opacity="1" marker-end="url(#mN2)"/>
+
+<path class="pl" d="M290 347 H680"/>
+<path class="flow fC" id="flCausFeed" d="M290 347 H680" marker-end="url(#mC)"/>
+<g class="valve" id="vFVC"><path d="M342 335 L354 347 L342 359 Z"/><path d="M366 335 L354 347 L366 359 Z"/><path d="M354 335 V324"/><rect x="346" y="314" width="16" height="10" rx="2"/></g>
+<g class="bubble" id="bFC"><circle cx="354" cy="300" r="14"/><line x1="340" y1="300" x2="368" y2="300"/><text class="bt" x="354" y="296" text-anchor="middle">FV</text><text class="bt2" x="354" y="309" text-anchor="middle">41</text></g>
+<text class="vtag" x="354" y="370" text-anchor="middle">41FV-CAUSTIC</text>
+<text class="vst" id="stCaus" x="354" y="384" text-anchor="middle">باز</text>
+<rect class="lvbg" x="386" y="336" width="112" height="22" rx="4"/>
+<text class="lv" x="440" y="352" text-anchor="end" direction="ltr" id="liveCaus">15.5 m³/h</text>
+
+<!-- product take-over: each gas has A (production) and B (waste/stack) valves -->
+<path class="pl" d="M810 105 H1000"/>
+<path class="flow fCl" id="flClOut" d="M810 105 H1000" marker-end="url(#mCl)"/>
+<g class="valve" id="vClA"><path d="M842 93 L854 105 L842 117 Z"/><path d="M866 93 L854 105 L866 117 Z"/><path d="M854 93 V82"/><rect x="846" y="72" width="16" height="10" rx="2"/></g>
+<text class="vtag" x="854" y="126" text-anchor="middle">Cl₂ A · PROD</text>
+<text class="vst" id="stClA" x="854" y="156" text-anchor="middle">بسته</text>
+<g class="valve" id="vClB"><path d="M918 93 L930 105 L918 117 Z"/><path d="M942 93 L930 105 L942 117 Z"/><path d="M930 93 V82"/><rect x="922" y="72" width="16" height="10" rx="2"/></g>
+<text class="vtag" x="930" y="126" text-anchor="middle">Cl₂ B · WASTE</text>
+<text class="vst" id="stClB" x="930" y="156" text-anchor="middle">بسته</text>
+
+<path class="pl" d="M810 195 H1000"/>
+<path class="flow fH2" id="flH2Out" d="M810 195 H1000" marker-end="url(#mH2)"/>
+<g class="valve" id="vH2A"><path d="M842 183 L854 195 L842 207 Z"/><path d="M866 183 L854 195 L866 207 Z"/><path d="M854 183 V172"/><rect x="846" y="162" width="16" height="10" rx="2"/></g>
+<text class="vtag" x="854" y="216" text-anchor="middle">H₂ A · PROD</text>
+<text class="vst" id="stH2A" x="854" y="246" text-anchor="middle">بسته</text>
+<g class="valve" id="vH2B"><path d="M918 183 L930 195 L918 207 Z"/><path d="M942 183 L930 195 L942 207 Z"/><path d="M930 183 V172"/><rect x="922" y="162" width="16" height="10" rx="2"/></g>
+<text class="vtag" x="930" y="216" text-anchor="middle">H₂ B · STACK</text>
+<text class="vst" id="stH2B" x="930" y="246" text-anchor="middle">بسته</text>
+
+<path class="pl" id="wasteLine" d="M810 276 H1000" opacity="0"/>
+
+<path class="pl" d="M604 458 V354 H1000"/>
+<path class="flow fB" id="flAnOut" d="M604 458 V354 H1000" marker-end="url(#mB)"/>
+
+<path class="pl" d="M736 458 V433 H1000"/>
+<path class="flow fC" id="flCaus" d="M736 458 V433 H1000" marker-end="url(#mC)"/>
+
+<!-- ================= NOTES + TITLE BLOCK ================= -->
+<line x1="40" y1="506" x2="900" y2="506" stroke="#1b3547"/>
+<text class="nt" x="40" y="528" id="flowNote">—</text>
+<text class="nt" x="40" y="549" id="flowNote2">—</text>
+<text class="nt" x="40" y="570" id="flowNote3">—</text>
+
+<rect class="tblock" x="920" y="512" width="360" height="76" rx="4"/>
+<line x1="920" y1="550" x2="1280" y2="550" stroke="#2c5267"/>
+<line x1="1130" y1="550" x2="1130" y2="588" stroke="#2c5267"/>
+<text class="tb" x="1270" y="536" text-anchor="end">P&amp;ID ساده‌شده — SINGLE ELECTROLYZER 41EL08101A</text>
+<text class="tb dim" x="1270" y="570" text-anchor="end">Doc 8408205-CB-PR-MNL-0102 Rev 02 · جدول ۶-۶</text>
+<text class="tb dim" x="1120" y="570" text-anchor="end">شیت ۱ از ۱</text>
+</svg>
+<div class="ramp" id="ramp"></div>
+</div></div></section>
+
+<section class="pane" id="paneDet">
+<section class="panel" style="margin-bottom:14px"><div class="head"><h3>جزئیات قابل‌تصمیم این گام — مقادیر زنده فرایند</h3><span class="code" id="detailCode">STEP-01</span></div>
+<div class="stepDetail" id="stepDetail"></div>
+<div class="valveRow" id="valveRow"></div>
+<div class="stepDetailTable" id="stepTable"></div></section>
+<section class="panel"><div class="head"><h3>Interlock &amp; Permissive Matrix — تک الکترولایزر</h3><span class="code">READ-ONLY</span></div><div class="body"><table class="matrix"><thead><tr><th>منطق ایمنی</th><th>حد / شرط</th><th>اقدام سامانه</th></tr></thead><tbody id="matrix"></tbody></table></div></section>
+</section>
+
+<section class="pane" id="paneStep">
+<aside class="panel"><div class="head"><h3>وضعیت گام و اقدام بعدی</h3><span class="code" id="stateCode">B-STATE</span></div><div class="body">
+<div class="alarm" id="alarm"><strong>آماده برای تأیید</strong>پیش‌نیازهای میدانی را تأیید کنید، سپس «شروع توالی» را بزنید.</div>
+<div class="eqs" style="margin-top:11px" id="eqs"></div>
+<div class="learn"><div class="ltitle"><b id="goalTitle">گام</b><span class="code" id="learnCode">STEP-01</span></div><div class="goal" id="goalText"></div><div class="specs" id="specs"></div><div class="stepDetailTable" id="flowTable"></div><ol id="learnSteps"></ol><div class="why" id="whyBox"></div></div>
+</div></aside>
+</section>
+
+<div class="note">این HMI فقط برای آموزش و تصمیم‌یار طراحی شده است؛ گام‌ها بازنمایی آموزشی رویه سند 8408205-CB-PR-MNL-0102 (فصل 6.6.3.3 و 6.7.1.2) هستند. هیچ فرمانی به FCS، SIS، رکتیفایر یا ولوها ارسال نمی‌شود. عمل‌کرد واقعی صرفاً بر اساس رویه‌های مصوب، interlockهای سایت و تأیید اپراتور مجاز انجام می‌شود.</div>
+</main>
+<script>
+const steps=[
+{code:'STEP-01',name:'پیش‌نیاز و گرم‌کردن',state:'B-STATE · بی‌بار',ka:0,current:0,
+what:'سل بی‌بار است. آب‌نمک فوق‌خالص با دمای ورودی ۷۰ تا ۷۵°C و غلظت NaCl بیش از ۲۸۰ g/L در حلقه می‌چرخد. دمای متوسط هدر خروجی کاتولیت باید بیش از ۷۵°C و ترجیحاً ۸۰°C باشد. پلاریزاسیون پس از رسیدن الکترولایزر به حداقل ۶۵°C در مرحله گرم‌کردن روشن می‌شود و برقرار می‌ماند؛ نیتروژن (N2-pu-AH / N2-pu-CH) نیز هدرهای آندی و کاتدی را از هوا آزاد کرده است.',
+goal:'هدف: سل «گرم، پر و بی‌هوا» شود تا برقدارکردن بدون آسیب ممبران ممکن باشد.',
+specs:[['دمای ورودی آب‌نمک','70–75°C','ok'],['غلظت NaCl آب‌نمک','> 280 g/L','ok'],['دمای هدر خروجی کاتولیت','> 75°C · ترجیحاً 80°C','ok'],['شروع پلاریزاسیون','دمای EL ≥ 65°C','warn'],['کاستیک NaOH','25–32 %wt',''],['دبی آب‌نمک/کاستیک','20 m³/h','']],
+todo:['دمای ورودی آب‌نمک فوق‌خالص را در بازه ۷۰ تا ۷۵°C و غلظت NaCl آن را بیش از ۲۸۰ g/L تأیید کنید.','دمای متوسط هدر خروجی کاتولیت را بیش از ۷۵°C و ترجیحاً ۸۰°C نگه دارید؛ غلظت NaOH کاتولیت باید بین ۲۵ تا ۳۲ درصد وزنی باشد.','پس از رسیدن الکترولایزر به حداقل ۶۵°C در مرحله گرم‌کردن، رکتیفایر پلاریزاسیون را روشن کنید و پس از آن روشن نگه دارید (حدود ۲۷ A).','فشار سیستم نیتروژن حداقل ۲۰ mbarg بیش از فشار کاری کلر باشد تا برگشت گاز رخ ندهد.'],
+why:'اگر دمای سل زیر ۷۵ درجه باشد برقدارکردن مجاز نیست؛ در غیر این صورت ممبران آسیب می‌بیند و بازده افت می‌کند.'},
+{code:'STEP-02',name:'برقدارکردن اولیه',state:'0.5 kA/EL',ka:0.5,current:0.5,
+what:'اپراتور START را لمس می‌کند؛ الکترولایزر استارت می‌شود و رکتیفایر اصلی تا کمینه جریان ممکن می‌رود (هدف ۰٫۵ kA/EL). حداکثر تا ۳۰ ثانیه باید وضعیت READY دیده شود؛ در غیر این صورت توالی را ادامه ندهید. پلاریزاسیون و پرج نیتروژن به هدرهای کاتولیت و آنولیت همچنان برقرار است.',
+goal:'هدف: تأیید READY ظرف ۳۰ ثانیه، عبور از «نقطه سرد» با حداقل جریان و ثبت ولتاژ هر ۱۶۳ المان.',
+specs:[['فرمان راه‌اندازی','START لمس شود','warn'],['READY','≤ 30 s','warn'],['جریان برقدارکردن','0.5 kA/EL','warn'],['ولتاژ تک‌المان','≤ 3.0 V','warn'],['پلاریزاسیون','≈ 27 A',''],['دبی آب‌نمک/کاستیک','20 m³/h','']],
+todo:['START را لمس کنید؛ الکترولایزر استارت می‌شود. حداکثر تا ۳۰ ثانیه وضعیت READY را تأیید کنید؛ اگر READY دیده نشد، ادامه ندهید و علت را بررسی کنید.','پس از READY، رکتیفایر اصلی را تا ۰٫۵ kA/الکترولایزر برقدار کنید و پلاریزاسیون را موازی نگه دارید. پرج نیتروژن به هدرهای کاتولیت و آنولیت همچنان برقرار است.'],
+why:'برقدارکردن در جریان بسیار کم اجازه می‌دهد نقص المان یا ممبران پیش از بارگذاری سنگین شناسایی شود.'},
+{code:'STEP-03',name:'بار کم و آزمون گاز',state:'C-INTERMEDIATE',ka:2,current:2,
+what:'بار به ۱٫۸–۲٫۲ kA/EL رسید. پرج نیتروژن هدر آنولیت (N2-pu-AH) بسته شده، اما پرج نیتروژن هدر کاتولیت (N2-pu-CH) همچنان باز است. شیرهای نمونه‌گیری آنولیت (A-is-SA) و کاتولیت (C-is-SA) باز شده‌اند و آزمون‌های on-load در حال اجراست.',
+goal:'هدف: رسیدن به بار کم و عبور از آزمون‌های اجباری کیفیت — حداکثر یک ساعت ماند در این حالت.',
+specs:[['بار هدف','1.8–2.2 kA/EL',''],['نرخ رمپ','≤ 0.5 kA/EL/min','warn'],['خلوص Cl₂','> 95 %vol','warn'],['H₂ در Cl₂','< 0.1 %vol','warn']],
+todo:['رمپ را با حداکثر ۰٫۵ kA/EL/min انجام دهید و در تمام تغییر بار، کلر و فشار دیفرانسیل را پایش کنید.','پرج نیتروژن هدر آنولیت N2-pu-AH را ببندید؛ پرج نیتروژن هدر کاتولیت N2-pu-CH همچنان باز می‌ماند.','آزمون Voltage Test و آنالیز هیدروژن در کلر را انجام دهید؛ H₂ بالای ۰٫۱٪ نیازمند Membrane Tear Test و Bubble Test II است.','خلوص کلر باید بیش از ۹۵٪ باشد؛ اگر پس از ۳۰ دقیقه زیر حد ماند، EL را خاموش و علت‌یابی کنید. ماند بیش از یک ساعت در C-INTERMEDIATE مجاز نیست.'],
+why:'در بار کم، نشتی ممبران بیشترین اثر را روی ایمنی و خلوص گاز دارد؛ به همین دلیل آزمون‌های پرهزینه دقیقاً در همین پنجره انجام می‌شوند.'},
+{code:'STEP-04',name:'از ۳٫۸ تا ۴٫۵ kA/EL',state:'4–4.5 kA/EL',ka:4.5,current:4.5,
+what:'بار به ۳٫۸ kA/EL و سپس ۴٫۵ kA/EL رسید. از ۳٫۸ kA/EL دبی آب‌نمک روی ۲۰ m³/h و دبی کاستیک (کاتولیت) روی ۴۱٫۷ m³/h تنظیم می‌شود؛ سپس پرج نیتروژن هدر کاتولیت (N2-pu-CH) قطع می‌گردد. در ۴ kA/EL: سامانه BVMS صفر شده و اینترلاک‌های low-low flow فعال شده‌اند. آزمون Anolyte Colour Test انجام شده است.',
+goal:'هدف: عبور کنترل‌شده از آستانه‌های ۴ و ۴٫۵ kA/EL و تثبیت حداقل بار پیوسته.',
+specs:[['آستانه BVMS','4 kA/EL','warn'],['دبی آب‌نمک','20 m³/h','warn'],['دبی کاستیک (کاتولیت)','41.7 m³/h','warn'],['فشار کلر','160–180 mbarg',''],['حداقل بار پیوسته','4.5 kA/EL','warn'],['pH آنولیت','3.5–5','']],
+todo:['بار را به ۳٫۸ kA/EL و همزمان فشار کلر را به ۱۶۰–۱۸۰ mbarg برسانید؛ دبی آب‌نمک را روی ۲۰ m³/h و دبی کاستیک (کاتولیت) را روی ۴۱٫۷ m³/h تنظیم کنید و Anolyte Colour Test را انجام دهید.','پس از افزایش دبی کاستیک، پرج نیتروژن هدر کاتولیت N2-pu-CH را قطع کنید.','Zero Setting سامانه BVMS را فعال کنید؛ اینترلاک‌های BVMS در ۴ kA/EL فعال می‌شوند.','در ۴ kA/EL اینترلاک‌های low-low flow آب‌نمک و کاتولیت فعال‌اند؛ دبی‌های تنظیم‌شده را پایش کنید.','بار را به حداقل ۴٫۵ kA/EL برای کار پیوسته برسانید و اسیدزنی (acidification) آب‌نمک را آغاز کنید.'],
+why:'بالای ۴ kA/EL نرخ تولید گاز و حرارت سریع بالا می‌رود؛ پایش جریان کم و فشار دیفرانسیل از عبور گاز به مسیر غیرمجاز جلوگیری می‌کند.'},
+{code:'STEP-05',name:'بار نامی',state:'A-STATE',ka:14.9,current:14.9,
+what:'در A-STATE کلر و هیدروژن از مسیر A-V به تولید تحویل می‌شود و ولوهای B مسیر WASTE/STACK بسته می‌مانند. تثبیت کامل بار انجام شده است.',
+goal:'هدف: رسیدن به بار نامی ۱۴٫۹ kA/EL معادل ۵٫۵ kA/m² و تثبیت تولید.',
+specs:[['بار نامی','14.9 kA/EL','ok'],['چگالی جریان','5.5 kA/m²','ok'],['دمای خروجی سل','86–90°C',''],['نرخ رمپ','0.5 kA/EL/min','warn']],
+todo:['رمپ تا ۱۴٫۹ kA/EL را با حداکثر ۰٫۵ kA/EL/min ادامه دهید و دبی آب‌نمک را تا ۳۷٫۳ m³/h بالا ببرید.','غلظت آنولیت و کاتولیت، کیفیت کلر و هیدروژن و pH آنولیت (۳٫۵ تا ۵) را مستمر ثبت کنید.','برای ممبران نو باید بدانید: حداکثر بار ۱۰ kA/EL در ۲۴ ساعت اول مجاز است.'],
+why:'محدودیت ۱۰ kA/EL در ۲۴ ساعت اول به ممبران تازه «استراحت» می‌دهد و عمر آن را بالا می‌برد؛ حداقل بار پیوسته هم ۴٫۵ kA/EL است.',
+flowTable:[['جریان الکترولایزر','دبی آب‌نمک [m³/h]','دبی کاستیک [m³/h]'],['راه‌اندازی · ۰ تا ۴ kA/EL','20.4','20.4'],['۴٫۰ kA/EL','20.4','20.4'],['۵٫۰ kA/EL','20.4','20.4'],['۶٫۰ kA/EL','20.4','20.4'],['۷٫۰ kA/EL','20.4','20.4'],['۸٫۰ kA/EL','20.4','20.4'],['۸٫۲ kA/EL','20.4','20.4'],['۹٫۰ kA/EL','22.6','41.7'],['۱۰٫۰ kA/EL','25.1','41.7'],['۱۰٫۹ kA/EL','27.4','41.7'],['۱۱٫۰ kA/EL','27.6','41.7'],['۱۲٫۰ kA/EL','30.1','41.7'],['۱۳٫۰ kA/EL','32.6','41.7'],['۱۳٫۶ kA/EL','34.1','41.7'],['۱۴٫۰ kA/EL','35.1','41.7'],['۱۴٫۸۶ kA/EL · بار نامی','37.3','41.7']] }
+];
+/* per-step live process picture: streams, valves, instruments, confirmable limits */
+const detail=[
+{streams:[
+ ['جریان رکتیفایر','0.0 kA/EL','رکتیفایر در حالت آماده، خروجی صفر','warn'],
+ ['راه‌اندازی/حالت','B-STATE','بی‌بار، پلاریزه و گرم','on'],
+ ['دبی آب‌نمک','20 m³/h','حلقه گردش برقرار','on'],
+ ['دمای هدر خروجی کاتولیت','> 75°C · ترجیحاً 80°C','شرط دمایی پیش از برقدارکردن','on'],
+ ['دمای آب‌نمک ورودی','70–75°C','طبق پیش‌نیاز سند','on'],
+ ['غلظت NaCl آب‌نمک','> 280 g/L','پیش‌نیاز سند برای آب‌نمک فوق‌خالص','on'],
+ ['شروع پلاریزاسیون','دمای EL ≥ 65°C','پس از آغاز گرم‌کردن، حدود ۲۷ A','on'],
+ ['دبی کاستیک (کاتولیت)','۱۵٫۵ m³/h','جدول ۶-۶ · پرکردن/گردش/پلاریزاسیون','on']],
+ valves:[['41FV · آب‌نمک','باز','open'],['41FV-caustic · کاستیک','باز','open'],['Cl₂ A · تولید','باز','open'],['Cl₂ B · WASTE','بسته','closed'],['H₂ A · تولید','باز','open'],['H₂ B · STACK','بسته','closed'],['HCl 41V-07003','بسته','closed'],['N₂ آنولیت/کاتولیت','باز','auto']],
+ rows:[
+ ['دمای ورودی آب‌نمک','70–75°C','دمای پیش‌نیاز آب‌نمک فوق‌خالص'],
+ ['غلظت آب‌نمک','> 280 g/L NaCl','تأیید ترکیب پیش از برقدارکردن'],
+ ['دمای هدر خروجی کاتولیت','> 75°C · ترجیحاً 80°C','شرط دمایی پیش از برقدارکردن'],
+ ['شروع پلاریزاسیون','دمای EL ≥ 65°C','رکتیفایر پلاریزاسیون پس از گرم‌کردن روشن می‌شود'],
+ ['غلظت کاستیک','25–32 %wt','NaOH در گردش'],
+ ['فشار نیتروژن','≥ 20 mbarg بالای Cl₂','جلوگیری از برگشت گاز به سل'],
+ ['ولتاژ هر ۱۶۳ المان','ثبت شده','مبنای مقایسه با گام بعد']]},
+{streams:[
+ ['فرمان START','لمس شده','الکترولایزر در حال استارت','on'],
+ ['READY','≤ 30 s','تا مشاهدهٔ READY، توالی ادامه ندارد','warn'],
+ ['جریان رکتیفایر','0.5 kA/EL','کمینه جریان پس از READY','on'],
+ ['جریان الکترولایزر','0.5 kA/EL','سل‌ها سری هستند؛ جریان کل ضرب نمی‌شود','on'],
+ ['دبی آب‌نمک','20 m³/h','بدون تغییر','on'],
+ ['دبی کاستیک (کاتولیت)','20.4 m³/h','جدول ۶-۶ · محدوده ۰ تا ۴ kA','on'],
+ ['دمای خروجی سل','≥ 75°C','نباید افت کند','on'],
+ ['ولتاژ تک‌المان','≤ 3.0 V','سقف مجاز هر المان','warn'],
+ ['پلاریزاسیون','≈ 27 A','موازی با رکتیفایر اصلی','on']],
+ valves:[['41FV · آب‌نمک','باز','open'],['41FV-caustic · کاستیک','باز','open'],['Cl₂ A · تولید','باز','open'],['Cl₂ B · WASTE','بسته','closed'],['H₂ A · تولید','باز','open'],['H₂ B · STACK','بسته','closed'],['HCl 41V-07003','بسته','closed'],['N₂ آنولیت/کاتولیت','باز','auto']],
+ rows:[
+ ['جریان هدف','0.5 kA/EL','حداقل بار برقدارکردن'],
+ ['ولتاژ هر المان','≤ 3.0 V','بالاتر یعنی المان معیوب'],
+ ['اقدام در تخطی','توقف EL + بازرسی','تعویض المان پیش از افزایش بار'],
+ ['نرخ مجاز تغییر بار','≤ 0.5 kA/EL/min','فراتر از آن به ممبران آسیب می‌زند'],
+ ['پلاریزاسیون','همیشه فعال ≈ 27 A','جلوگیری از خوردگی الکترود']]},
+{streams:[
+ ['جریان رکتیفایر','2.0 kA/EL','پنجره بار کم ۱٫۸–۲٫۲','on'],
+ ['جریان الکترولایزر','2.0 kA/EL','سل‌ها سری — ۱۶۳ المان با همین جریان','on'],
+ ['خلوص Cl₂','> 95 %vol','پایش هر ۱۵ دقیقه','warn'],
+ ['H₂ در Cl₂','< 0.1 %vol','حد ایمنی ممبران','warn'],
+ ['دبی آب‌نمک','20 m³/h','ثابت تا ۴ kA/EL','on'],
+ ['دبی کاستیک (کاتولیت)','20.4 m³/h','جدول ۶-۶ · تا ۸٫۲ kA بدون تغییر','on'],
+ ['هیدروژن/فشار دیفرانسیل','ΔP 20–40 mbar','در تمام تغییر بار پایش شود','warn']],
+ valves:[['41FV · آب‌نمک','باز','open'],['41FV-caustic · کاستیک','باز','open'],['Cl₂ A · تولید','باز','open'],['Cl₂ B · WASTE','بسته','closed'],['H₂ A · تولید','باز','open'],['H₂ B · STACK','بسته','closed'],['HCl 41V-07003','بسته','closed'],['N₂ آنولیت','بسته','closed'],['N₂ کاتولیت','باز','auto']],
+ rows:[
+ ['ماند مجاز در C-INTERMEDIATE','حداکثر 1 ساعت','عبور از آن = خاموشی Cell Room'],
+ ['خلوص کلر پایین','> 30 دقیقه زیر 95 %vol','EL را خاموش و علت‌یابی کنید'],
+ ['H₂ در کلر','≥ 0.1 %vol','Membrane Tear Test + Bubble Test II'],
+ ['نمونه‌گیری on-load','A-is-SA / C-is-SA','آنالیز آنولیت و کاتولیت'],
+ ['نرخ رمپ','≤ 0.5 kA/EL/min','پایش مستمر کلر و ΔP']]},
+{streams:[
+ ['جریان رکتیفایر','4.5 kA/EL','حداقل بار پیوسته','on'],
+ ['جریان الکترولایزر','4.5 kA/EL','حداقل بار پیوسته','on'],
+ ['فشار کلر','160–180 mbarg','محدوده تولید','on'],
+ ['pH آنولیت','3.5–5','شروع اسیدزنی','on'],
+ ['دبی کاستیک (کاتولیت)','41.7 m³/h','تنظیم عملیاتی از ۳٫۸ kA/EL','on'],
+ ['دبی آب‌نمک','20 m³/h','تنظیم عملیاتی در آستانه BVMS','on'],
+ ['BVMS','Zero Setting شده','اینترلاک‌ها فعال','on'],
+ ['low-low flow','فعال در 4 kA/EL','آب‌نمک و کاتولیت','on']],
+ valves:[['41FV · آب‌نمک','باز','open'],['41FV-caustic · کاستیک','باز','open'],['Cl₂ A · تولید','باز — انتقال محصول','open'],['Cl₂ B · WASTE','بسته','closed'],['H₂ A · تولید','باز — انتقال محصول','open'],['H₂ B · STACK','بسته','closed'],['HCl 41V-07003','باز — تزریق','open'],['N₂ آنولیت/کاتولیت','بسته','closed']],
+ rows:[
+ ['آستانه BVMS','4 kA/EL','Zero Setting و فعال‌سازی اینترلاک'],
+ ['آزمون ضروری','Anolyte Colour Test','در ۳٫۸ kA/EL انجام شود'],
+ ['حداقل بار پیوسته','4.5 kA/EL','زیر آن کار پیوسته مجاز نیست'],
+ ['اسیدزنی آب‌نمک','فعال','کنترل pH آنولیت ۳٫۵–۵'],
+ ['دبی کاتولیت','41.7 m³/h از 3.8 kA/EL','تطبیق دبی با بار عملیاتی'],
+ ['ولتاژ تک‌المان','≤ 3.0 V','پایش مستمر']]},
+{streams:[
+ ['جریان رکتیفایر','14.9 kA/EL','بار نامی · 5.5 kA/m²','on'],
+ ['جریان الکترولایزر','14.9 kA/EL','بار نامی — ۱۶۳ المان سری','on'],
+ ['دبی آب‌نمک','37.3 m³/h','جدول ۶-۶ · ۱۴٫۸۶ kA/EL','on'],
+ ['دبی کاستیک (کاتولیت)','41.7 m³/h','جدول ۶-۶ · از ۹٫۰ kA تا ۱۴٫۸۶ kA/EL','on'],
+ ['دمای خروجی سل','86–90°C','پنجره چگالی بالا','on'],
+ ['خلوص Cl₂','> 95 %vol','مستمر ثبت شود','on'],
+ ['pH آنولیت','3.5–5','کنترل پیوسته','on']],
+ valves:[['41FV · آب‌نمک','باز','open'],['41FV-caustic · کاستیک','باز','open'],['Cl₂ A · تولید','باز','open'],['Cl₂ B · WASTE','بسته','closed'],['H₂ A · تولید','باز','open'],['H₂ B · STACK','بسته','closed'],['HCl 41V-07003','باز','open'],['N₂ آنولیت/کاتولیت','بسته','closed']],
+ rows:[
+ ['بار نامی','14.9 kA/EL','معادل 5.5 kA/m²'],
+ ['دبی کاتولیت','هر تغییر بار = تنظیم دبی','دبی کاتولیت با بار تطبیق شود'],
+ ['ممبران نو','حداکثر 10 kA/EL در 24 ساعت اول','استراحت ممبران تازه'],
+ ['دمای خروجی سل','86–90°C در چگالی 5–6','پنجره عملیاتی جدول ۶-۵'],
+ ['در نبود مصرف کلر','ولوهای B بسته','کلر و هیدروژن از مسیر A-V به تولید هدایت می‌شوند'],
+ ['ثبت مستمر','آنولیت/کاتولیت/گاز/pH','پایش کیفیت تولید'],
+ ['جدول ۶-۶ · جریان EL','دبی آب‌نمک [m³/h]','راهنمای افزایش دبی با جریان'],
+ ['۰ تا ۸٫۲ kA/EL','20.4 m³/h','دبی راه‌اندازی و بار پایین'],
+ ['۹٫۰ kA/EL','22.6 m³/h','افزایش دبی آب‌نمک'],
+ ['۱۰٫۰ kA/EL','25.1 m³/h','افزایش دبی آب‌نمک'],
+ ['۱۰٫۹ kA/EL','27.4 m³/h','افزایش دبی آب‌نمک'],
+ ['۱۱٫۰ kA/EL','27.6 m³/h','افزایش دبی آب‌نمک'],
+ ['۱۲٫۰ kA/EL','30.1 m³/h','افزایش دبی آب‌نمک'],
+ ['۱۳٫۰ kA/EL','32.6 m³/h','افزایش دبی آب‌نمک'],
+ ['۱۳٫۶ kA/EL','34.1 m³/h','افزایش دبی آب‌نمک'],
+ ['۱۴٫۰ kA/EL','35.1 m³/h','افزایش دبی آب‌نمک'],
+ ['۱۴٫۸۶ kA/EL','37.3 m³/h','بار نامی · مقدار نهایی']]}
+];
+/* current ladder: every point on the 0 → 14.9 kA/EL path and where it comes from */
+const ramp=[
+ [0,'B-STATE','بی‌بار — پلاریزاسیون ۲۷ A',0],
+ [0.5,'برقدارکردن','حداقل جریان، عبور از نقطه سرد',1],
+ [2,'بار کم','پنجره ۱٫۸–۲٫۲ — آزمون گاز',2],
+ [3.8,'Anolyte Colour','آزمون پین‌هول + فشار کلر ۱۶۰–۱۸۰',3],
+ [4,'آستانه BVMS','Zero Setting + اینترلاک low-low',3],
+ [4.5,'حداقل پیوسته','زیر آن کار پیوسته مجاز نیست',3],
+ [10,'سقف ممبران نو','۲۴ ساعت اول',4],
+ [14.9,'بار نامی','۵٫۵ kA/m²',4]];
+const safety=[['ولتاژ تک‌المان','بیش از 3.0 V','توقف EL و بازرسی المان','hold'],['H₂ در Cl₂','≥ 0.1 %vol','Membrane Tear Test + Bubble Test II','hold'],['دمای خروجی سل','کمتر از 75°C','عدم مجوز برقدارکردن','trip'],['BVMS / Low-low flow','4 kA/EL','فعال‌سازی اینترلاک','ready'],['فشار کلر / ΔP','غیرعادی طبق اینترلاک','کاهش بار یا تریپ سایت','hold'],['ماند C-INTERMEDIATE','بیش از 1 ساعت','خاموشی Cell Room','trip']];
+let step=0,running=false;const $=id=>document.getElementById(id);
+const eqDefs=[['41E-06103','BRINE HEATER'],['41EL08101A','ELECTROLYZER'],['41V-31102A','CATHOLYTE TANK'],['41E-31101','CATHOLYTE HTR']];
+function setOn(id,on){let e=$(id);if(e)e.classList.toggle('on',on);if(e)e.classList.toggle('off',!on)}
+function renderEqs(){let box=$('eqs');if(step!==0){box.innerHTML='';box.style.display='none';return}box.style.display='grid';let on4=running;box.innerHTML=eqDefs.map((e,i)=>{let on=on4&&(i===1?true:(i===0||i===2||i===3));return `<div class="eq ${on?'on':'off'}"><b>${e[0]}</b><span>${e[1]}</span></div>`}).join('')}
+function renderMatrix(){$('matrix').innerHTML=safety.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td><span class="status ${r[3]}">${r[2]}</span></td></tr>`).join('')}
+function renderDetail(){let d=detail[step];
+$('detailCode').textContent=steps[step].code;
+$('stepDetail').innerHTML=d.streams.map(s=>`<div class="sd ${running?(s[3]==='warn'?'warn':'on'):'off'}"><label>${s[0]}</label><b>${s[1]}</b><small>${s[2]}</small></div>`).join('');
+$('valveRow').innerHTML=d.valves.map(v=>`<span class="vpill ${v[2]}"><i></i>${v[0]} — ${v[1]}</span>`).join('');
+$('stepTable').innerHTML='<div class="sdr hd"><div>پارامتر</div><div>مقدار / حد قابل‌تصمیم</div><div>تصمیم یا اقدام</div></div>'+d.rows.map(r=>{let hot=/توقف|خاموش|بازرسی|خاموشی|مجاز نیست/.test(r[2]);return `<div class="sdr${hot?' hot':''}"><div class="k">${r[0]}</div><div class="v">${r[1]}</div><div class="m">${r[2]}</div></div>`}).join('')}
+function renderStepper(){$('stepper').innerHTML=steps.map((p,i)=>`<div class="step ${i<step?'done':i===step?'now':''}" data-step="${i}"><i>${i<step?'✓':i+1}</i>${p.name}</div>`).join('<span class="sep"></span>');document.querySelectorAll('[data-step]').forEach(e=>e.onclick=()=>{step=+e.dataset.step;running=true;render();alarm('','گام '+steps[step].code,steps[step].what)})}
+function render(){let p=steps[step];
+$('phase').textContent=p.code;$('stateCode').textContent=running?p.state:'B-STATE';
+$('ctlState').textContent=running?`ACTIVE · ${p.state} · ${p.ka.toFixed(1)} kA/EL`:'B-STATE · STANDBY';
+$('topState').textContent=running?`${p.state} · ACTIVE`:'B-STATE · READY';
+$('goalTitle').textContent=p.name;$('learnCode').textContent=p.code;$('goalText').innerHTML=p.goal;
+$('specs').innerHTML=p.specs.map(s=>`<div class="spec ${s[2]}"><label>${s[0]}</label><b>${s[1]}</b></div>`).join('');
+let flowTable=$('flowTable');flowTable.style.display=p.flowTable?'block':'none';flowTable.innerHTML=p.flowTable?'<div class="sdr hd"><div>'+p.flowTable[0][0]+'</div><div>'+p.flowTable[0][1]+'</div><div>'+p.flowTable[0][2]+'</div></div>'+p.flowTable.slice(1).map(r=>`<div class="sdr"><div class="k">${r[0]}</div><div class="v">${r[1]}</div><div class="m">${r[2]}</div></div>`).join(''):'';
+$('learnSteps').innerHTML=p.todo.map(x=>`<li class="${/مجاز نیست|خاموش|توقف|متوقف/.test(x)?'stop':''}">${x}</li>`).join('');
+$('whyBox').innerHTML='<b>چرا این گام مهم است: </b>'+p.why;
+$('curRail').textContent=p.current.toFixed(1)+' kA';
+$('cellCur').textContent=p.current.toFixed(0)+' kA';$('cellCur').setAttribute('opacity',running?1:0);
+/* Table 6-6 provides the baseline; the 3.8–4.5 kA/EL training step follows the site's 41.7 m3/h caustic setting. */
+const caus=['15.5 m³/h','20.4 m³/h','20.4 m³/h','41.7 m³/h','41.7 m³/h'][step];
+const brin=['20.4 m³/h','20.4 m³/h','20.4 m³/h','20 m³/h','37.3 m³/h'][step];
+$('liveCaus').textContent=caus;$('liveBrine').textContent=brin;
+$('cellState').textContent=running?p.state:'B-STATE · بی‌بار';
+/* live load bar: width is the share of nominal 14.9 kA/EL */
+const pct=running?Math.round(p.ka/14.9*100):0;
+$('loadBar').setAttribute('width',(200*pct/100).toFixed(1));
+$('loadTxt').textContent=`بار: ${pct}٪ از ۱۴٫۹ kA/EL · ${p.ka.toFixed(1)} kA/EL`;
+$('back').disabled=!running||step===0;$('next').disabled=!running;$('next').textContent=step===4?'ثبت A-STATE':'تأیید گام و ادامه';
+$('ramp').innerHTML=ramp.map(r=>`<div class="r ${running&&step>=r[3]?'on':''}"><b>${r[0]} kA/EL</b><s>${r[1]}</s><em>${r[2]}</em></div>`).join('');
+paintSVG();renderDetail();renderStepper();renderEqs();renderMatrix();paintTabs()}
+function paintSVG(){let s=step,r=running;
+document.querySelectorAll('#sch .flow').forEach(e=>{e.setAttribute('opacity',0);e.classList.remove('on','visc','fast')});
+document.querySelectorAll('#sch .valve').forEach(e=>e.classList.remove('f','o'));
+[['lampMain',r&&s>=1],['lampPol',r]].forEach(([id,v])=>setOn(id,v));
+['vFVB','vFVC'].forEach(id=>{setOn(id,false);$(id).classList.add('f')});
+const clA=r&&s>=1,clB=s===0,h2A=r&&s>=1,h2B=s===0;
+setOn('vClA',clA);setOn('vClB',clB);setOn('vH2A',h2A);setOn('vH2B',h2B);
+['cellA','cellC'].forEach(id=>$(id).classList.toggle('activeCell',r));
+$('tV').classList.toggle('dim',!(r&&s>=1));$('pV').classList.toggle('dim',!(r&&s>=1));
+/* explicit open/closed state under each valve, per step */
+[['stFernB',true],['stCaus',true],['stClA',clA],['stClB',clB],['stH2A',h2A],['stH2B',h2B]].forEach(([id,open])=>{
+let e=$(id);if(!e)return;e.textContent=open?'باز':'بسته';e.classList.toggle('open',open);e.classList.toggle('shut',!open);e.classList.toggle('blink',open&&r)});
+/* an open valve pulses so the required line-up is obvious */
+const vOpen={vFVB:true,vFVC:true,vClA:clA,vClB:clB,vH2A:h2A,vH2B:h2B};
+Object.entries(vOpen).forEach(([id,open])=>{let e=$(id);if(e)e.classList.toggle('blink',!!(open&&r))});
+/* liquid loops run whenever the sequence is live */
+if(r)['flBrine','flCausFeed','flCaus','flAnOut'].forEach(id=>$(id)&&$(id).setAttribute('opacity',1));
+/* gas only after energizing */
+const gasFactor=r&&s>=1?Math.max(.18,steps[s].ka/14.9):0;['flClOut','flH2Out'].forEach(id=>{let e=$(id);if(e){e.style.setProperty('--gas-speed',`${(2.5-1.35*gasFactor).toFixed(2)}s`);e.style.setProperty('--gas-width',`${(2.4+2.4*gasFactor).toFixed(1)}px`);e.style.opacity=gasFactor;e.classList.toggle('gas',gasFactor>0)}});
+/* DC bus is energized with the rectifier */
+if(r&&s>=1)$('flBusFlow').setAttribute('opacity',1);
+/* acidification from 4 kA; nitrogen purge before energizing */
+if(r&&s>=3){$('hclLine').setAttribute('opacity',1);$('flHCl').setAttribute('opacity',1);$('n2Line').setAttribute('opacity',0);$('flN2').setAttribute('opacity',0)}
+else if(r){$('hclLine').setAttribute('opacity',0);$('flHCl').setAttribute('opacity',0);$('n2Line').setAttribute('opacity',1);$('flN2').setAttribute('opacity',1)}
+else{$('hclLine').setAttribute('opacity',0);$('flHCl').setAttribute('opacity',0);$('n2Line').setAttribute('opacity',0);$('flN2').setAttribute('opacity',0)}
+$('flowNote').textContent=!r?'در B-STATE گردش آب‌نمک و کاتولیت برقرار است؛ ولوهای B برای WASTE/STACK باز و ولوهای A بسته هستند.':s===0?'پیش‌نیاز: کلر به WASTE و هیدروژن به STACK از ولوهای B هدایت می‌شوند؛ پرج نیتروژن هر دو هدر برقرار است.':s===1?'پس از START، ولوهای A مسیر تولید باز و ولوهای B مسیر WASTE/STACK بسته هستند؛ پرج نیتروژن هر دو هدر برقرار است.':s===2?'بار کم: ولوهای A باز و ولوهای B بسته هستند؛ پرج هدر آنولیت بسته و پرج هدر کاتولیت باز است.':s===3?'در آستانه BVMS، ولوهای A باز و ولوهای B بسته هستند؛ پس از افزایش دبی کاستیک، پرج هدر کاتولیت قطع می‌شود.':'A-STATE: کلر و هیدروژن به تولید؛ هر دو ولو A باز و ولوهای B بسته هستند.';
+$('flowNote2').textContent=r?(s>=4?'اسیدزنی آب‌نمک فعال است و pH آنولیت در محدوده ۳٫۵ تا ۵ کنترل می‌شود.':'دمای خروجی سل باید حداقل ۷۵ درجه بماند.'):'دمای خروجی سل ≥ 75°C برای اجازه برقدارکردن الزامی است.';
+$('flowNote3').textContent=r?(s>=2?'ولتاژ تک‌المان‌ها ثبت شده؛ هیچ المانی بالای ۳٫۰ ولت نیست.':'پلاریزاسیون معکوس فعال است تا خوردگی الکترود رخ ندهد.'):'پلاریزاسیون معکوس فعال است تا خوردگی الکترود رخ ندهد.';
+/* motion: only the flow dashes move, faster with load */
+const fast=s>=4,mid=s>=3;
+['flBrine','flCausFeed','flCaus','flAnOut'].forEach(id=>{let e=$(id);if(e){e.classList.toggle('on',r);e.classList.add('visc')}});
+['flClOut','flH2Out'].forEach(id=>{let e=$(id);if(e){e.classList.toggle('on',r&&s>=1);e.classList.toggle('fast',mid)}});
+$('flBusFlow')&&$('flBusFlow').classList.toggle('on',r&&s>=1);
+$('flHCl')&&$('flHCl').classList.toggle('on',r&&s>=3);
+$('flN2')&&$('flN2').classList.toggle('on',r&&s<3);
+document.querySelectorAll('#sch .memb').forEach(e=>e.classList.toggle('live',r&&s>=1));
+}
+function alarm(type,title,text){$('alarm').className='alarm '+type;$('alarm').innerHTML=`<strong>${title}</strong>${text}`}
+function go(n){step=Math.max(0,Math.min(4,n));render();
+if(step===2)alarm('stop','HOLD POINT — آزمون ممبران',steps[2].what);
+else if(step===3)alarm('','HOLD POINT — BVMS و ۴ kA',steps[3].what);
+else if(step===4)alarm('ok','A-STATE',steps[4].what);
+else alarm('',steps[step].name,steps[step].what)}
+$('start').onclick=()=>{running=true;step=0;render();alarm('ok','راه‌اندازی کنترل‌شده',steps[0].what)};
+$('next').onclick=()=>{if(step<4)go(step+1);else alarm('ok','A-STATE ثبت شد','الکترولایزر در ظرفیت نامی آموزشی است.')};
+$('back').onclick=()=>{if(step>0)go(step-1)};
+$('jump').onclick=()=>{running=true;go(4)};
+$('reset').onclick=()=>{running=false;step=0;render();alarm('','آماده برای تأیید','پیش‌نیازهای میدانی را تأیید کنید، سپس «شروع توالی» را بزنید.')};
+$('shutdown').onclick=()=>{
+alarm('stop','OFF / SHUTDOWN — تک الکترولایزر','۱) بار را تا ۱٫۸–۲٫۲ kA/EL با حداکثر ۱ kA/EL/min کاهش دهید و در قطع overflow مکث کنید. ۲) زیر ۴ kA، اسیدزنی خودکار قطع می‌شود. ۳) نیتروژن N2-pu-AH و N2-pu-CH را باز کنید. ۴) کلر و هیدروژن را به waste gas/stack منتقل کنید (A-V بسته، B-V باز). ۵) breaker و DC switch را باز کنید؛ پلاریزاسیون ۱٫۵–۲٫۰ V فعال بماند. ۶) تا ۴ ساعت گردش گرم ≥ ۷۵ درجه؛ بیش از ۴ ساعت E-STATE و سردسازی ۴۰–۵۰ درجه.');
+$('goalTitle').textContent='توالی OFF — توقف کنترل‌شده';$('learnCode').textContent='SHUTDOWN';
+$('goalText').innerHTML='هدف: رساندن ایمن الکترولایزر از A-STATE به B-STATE بدون آسیب به ممبران و بدون ورود گاز به مسیر غیرمجاز.';
+$('specs').innerHTML=[['نرخ کاهش بار','≤ 1 kA/EL/min','warn'],['بار توقف','1.8–2.2 kA/EL',''],['گردش گرم','≤ 4 ساعت',''],['سردسازی','40–50°C','']].map(s=>`<div class="spec ${s[2]}"><label>${s[0]}</label><b>${s[1]}</b></div>`).join('');
+$('learnSteps').innerHTML=['کاهش بار و تطبیق دبی آب‌نمک/کاتولیت؛ زیر ۴ kA اسیدزنی قطع می‌شود.','بررسی H₂ در کلر و ولتاژ المان‌ها در ۱٫۸–۲٫۲ kA.','بازکردن نیتروژن و انتقال گاز به waste gas/stack؛ بازکردن breaker و DC switch.','بیش از ۴ ساعت: E-STATE و گردش سرد ۴۰–۵۰ درجه طبق دستورالعمل.'].map(x=>`<li class="stop">${x}</li>`).join('');
+$('whyBox').innerHTML='<b>چرا این گام مهم است: </b>کاهش تدریجی بار و نگه‌داشتن گردش گرم، مانع شوک حرارتی و تبلور در مسیرها می‌شود.'};
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>{
+document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('active',x===b));
+document.querySelectorAll('.pane').forEach(p=>p.classList.toggle('active',p.id===b.dataset.pane))});
+/* tabs take the colour of the step reached in the sequence */
+function paintTabs(){document.querySelectorAll('#tabs button').forEach(b=>{for(let i=0;i<6;i++)b.classList.remove('step'+i);b.classList.add('step'+step)})}
+$('themeToggle').onclick=()=>{let day=document.body.classList.toggle('day');$('themeToggle').textContent=day?'حالت شب':'حالت روز'};
+render();
+</script></body></html>
